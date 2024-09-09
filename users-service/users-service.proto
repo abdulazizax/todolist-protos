@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "./genproto/auth";
+
+service AuthService {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
+    rpc CreateAdmin(CreateAdminRequest) returns (CreateAdminResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    rpc GetUserByEmail(GetUserByEmailRequest) returns (RegisterResponse);
+    rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (RawResponse);
+    rpc SendVerificationCode(SendVerificationCodeRequest) returns (RawResponse);
+}
+
+message UpdateUserPasswordRequest{
+    string user_id = 1;
+    string email = 2;
+    int32 verification_code = 3;
+    string new_password = 4;
+}
+
+message SendVerificationCodeRequest{
+    string user_id = 1;
+    string email = 2;
+}
+
+message RawResponse{
+    string message = 1;
+}
+
+// Get User By Email Request and Response
+message GetUserByEmailRequest {
+    string email = 1;
+}
+
+// Create Admin Request and Response
+message CreateAdminRequest {
+    string user_id = 1;
+}
+
+message CreateAdminResponse {
+    string message = 1;
+}
+
+// Register Request and Response
+message RegisterRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    string user_id = 1;
+}
+
+// Login Request and Response
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
+// Logout Request and Response
+message LogoutRequest {
+    string user_id = 1;
+}
+
+message LogoutResponse {
+    string message = 1;
+}
+
+// Delete User Request and Response
+message DeleteUserRequest {
+    string user_id = 1;
+}
+
+message DeleteUserResponse {
+    string message = 1;
+}
