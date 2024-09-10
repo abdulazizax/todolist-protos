@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package task;
+
+option go_package = "./genproto/task";
+
+// Import uchun kerakli fayllar (agar bo'lsa)
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// Vazifa xizmati uchun gRPC servisi
+service TaskService {
+    rpc CreateTask (CreateTaskRequest) returns (CreateTaskResponse);
+    rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+    rpc UpdateTask (UpdateTaskRequest) returns (google.protobuf.Empty);
+    rpc DeleteTask (DeleteTaskRequest) returns (google.protobuf.Empty);
+}
+
+
+// Vazifa uchun metadata message
+message TaskMetadata {
+    string user_id = 1;      // Foydalanuvchi identifikatori
+    string title = 2;        // Vazifa sarlavhasi
+    google.protobuf.Timestamp created_at = 3; // Vazifa yaratilgan vaqt
+}
+
+// Vazifa detallari uchun message
+message TaskDetails {
+    string description = 1;  // Vazifa tavsifi
+    string status = 2;       // Vazifa holati (open, in-progress, done)
+    int32 priority = 3;      // Ustuvorlik (1 yuqori, 2 o'rta, 3 past)
+    google.protobuf.Timestamp due_date = 4; // Vazifa bajarilishi kerak bo'lgan sana
+    google.protobuf.Timestamp updated_at = 5; // Vazifa yangilangan vaqt
+}
+
+// Vazifa yaratish uchun so'rov
+message CreateTaskRequest {
+    TaskMetadata metadata = 1;
+    TaskDetails details = 2;
+}
+
+// Vazifa yaratish uchun javob
+message CreateTaskResponse {
+    string id = 1; // Yaratilgan vazifa IDsi
+}
+
+// Vazifa ro'yxati uchun so'rov
+message ListTasksRequest {
+    string user_id = 1; // Foydalanuvchi IDsi
+}
+
+// Vazifa ro'yxati uchun javob
+message ListTasksResponse {
+    repeated TaskMetadata tasks = 1; // Vazifa metadata ro'yxati
+}
+
+// Vazifani yangilash uchun so'rov
+message UpdateTaskRequest {
+    string id = 1;           // Vazifa IDsi
+    TaskMetadata metadata = 2;
+    TaskDetails details = 3;
+}
+
+// Vazifani o'chirish uchun so'rov
+message DeleteTaskRequest {
+    string id = 1; // Vazifa IDsi
+}
